@@ -22,7 +22,7 @@ const RecipeForm = () => {
     const recipe = { name, ingredients, instructions, prepTime, difficulty };
 
     try {
-      const response = await fetch('/api/recipes', {
+      const response = await fetch('http://localhost:4000/api/recipes', {
         method: 'POST',
         body: JSON.stringify(recipe),
         headers: {
