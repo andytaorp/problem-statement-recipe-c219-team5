@@ -1,46 +1,24 @@
-import { useState } from "react";
-import { useAIContext } from "../hooks/useAIContext";
+import { createContext, useReducer } from "react";
 
-const AIDetection = () => {
-  const [image, setImage] = useState(null);
-  const { aiResult, dispatch } = useAIContext();
+export const AIContext = createContext();
 
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const response = await fetch("https://logmeal.com/api/getting-started/", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer YOUR_API_KEY`,
-        },
-        body: formData,
-      });
-
-      const data = await response.json();
-      dispatch({ type: "SET_AI_RESULT", payload: data });
-    } catch (error) {
-      console.error("AI request failed", error);
-    }
-  };
-
-  return (
-    <div>
-      <h2>Upload Food Image</h2>
-      <input type="file" accept="image/*" onChange={handleImageUpload} />
-      {aiResult && (
-        <div>
-          <h3>Detected Food: {aiResult.food_name}</h3>
-          <p>Calories: {aiResult.calories}</p>
-          <p>Serving Size: {aiResult.serving_size}</p>
-        </div>
-      )}
-    </div>
-  );
+const aiReducer = (state, action) => {
+  switch (action.type) {
+    case "SET_AI_RESULT":
+      return { ...state, aiResult: action.payload };
+    case "CLEAR_AI_RESULT":
+      return { ...state, aiResult: null };
+    default:
+      return state;
+  }
 };
 
-export default AIDetection;
+export const AIContextProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(aiReducer, { aiResult: null });
+
+  return (
+    <AIContext.Provider value={{ ...state, dispatch }}>
+      {children}
+    </AIContext.Provider>
+  );
+};
