@@ -2,15 +2,13 @@ import { useState, useContext } from 'react';
 import { useAuthContext } from "../hooks/useAuthContext"; 
 import { RecipeContext } from '../context/RecipeContext';
 
-
-
 const RecipeForm = () => {
-
   const [name, setName] = useState('');
   const [ingredients, setIngredients] = useState('');
   const [instructions, setInstructions] = useState('');
   const [difficulty, setDifficulty] = useState('easy'); 
-  const [prepTime, setprepTime] = useState('');
+  const [prepTime, setPrepTime] = useState('');
+  const [category, setCategory] = useState('Dessert'); 
   const [error, setError] = useState(null);
 
   const { user } = useAuthContext(); 
@@ -19,7 +17,7 @@ const RecipeForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const recipe = { name, ingredients, instructions, prepTime, difficulty };
+    const recipe = { name, ingredients, instructions, prepTime, difficulty, category };
 
     try {
       const response = await fetch('http://localhost:4000/api/recipes', {
@@ -46,8 +44,9 @@ const RecipeForm = () => {
       setName('');
       setIngredients('');
       setInstructions('');
-      setprepTime('');
+      setPrepTime('');
       setDifficulty('easy'); 
+      setCategory('Dessert'); 
       setError(null); 
 
     } catch (err) {
@@ -83,7 +82,7 @@ const RecipeForm = () => {
       <input 
         type="number" 
         value={prepTime} 
-        onChange={(e) => setprepTime(e.target.value)} 
+        onChange={(e) => setPrepTime(e.target.value)} 
         required 
       />
 
@@ -93,6 +92,25 @@ const RecipeForm = () => {
         <option value="medium">Medium</option>
         <option value="hard">Hard</option>
       </select>
+
+      <label>Category:</label>
+      <select value={category} onChange={(e) => setCategory(e.target.value)} required>
+        <option value="Dessert">Dessert</option>
+        <option value="Main Dish">Main Dish</option>
+        <option value="Appetizer">Appetizer</option>
+        <option value="Salad">Salad</option>
+        <option value="Beverage">Beverage</option>
+        <option value="Soup">Soup</option>
+        <option value="Bread">Bread</option>
+        <option value="Breakfast">Breakfast</option>
+        <option value="Side Dish">Side Dish</option>
+        <option value="Snack">Snack</option>
+        <option value="Sauce">Sauce</option>
+        <option value="Marinade">Marinade</option>
+        <option value="Finger Food">Finger Food</option>
+        <option value="Other">Other</option>
+      </select>
+
       <br/>
       <br/>
       <button type="submit">Add Recipe</button>
