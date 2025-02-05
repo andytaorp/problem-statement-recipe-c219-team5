@@ -25,7 +25,7 @@ const getRecipe = async (req, res) => {
 
 // Create a new recipe
 const createRecipe = async (req, res) => {
-  const { name, ingredients, instructions, prepTime, difficulty, imageUrl } =
+  const { name, ingredients, instructions, prepTime, difficulty, category, imageUrl } =
     req.body;
   let emptyFields = [];
   if (!name) {
@@ -43,6 +43,9 @@ const createRecipe = async (req, res) => {
   if (!difficulty) {
     emptyFields.push("difficulty");
   }
+  if (!category) {
+    emptyFields.push("category");
+  }
   if (emptyFields.length > 0) {
     return res
       .status(400)
@@ -57,6 +60,7 @@ const createRecipe = async (req, res) => {
       instructions,
       prepTime,
       difficulty,
+      category,
       imageUrl,
     });
     res.status(200).json(recipe);
