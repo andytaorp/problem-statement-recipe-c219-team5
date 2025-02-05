@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import { RecipeContextProvider } from './context/RecipeContext'
 import { AuthContextProvider } from './context/AuthContext'
-// import { AIContextProvider } from './context/AIContext';
+import { AIContextProvider } from './context/AIContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
