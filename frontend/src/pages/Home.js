@@ -1,8 +1,8 @@
 import {useEffect} from 'react'
 import { useRecipeContext } from "../hooks/useRecipeContext"
 import { useAuthContext } from "../hooks/useAuthContext"
-import RecipeDetails from '../components/RecipesDetails'
-import RecipeForm from '../components/RecipesForm'
+import RecipeDetails from '../components/RecipeDetails'
+import RecipeForm from '../components/RecipeForm'
 const Home = () => {
     const {recipes, dispatch} = useRecipeContext()
     const {user} = useAuthContext()
