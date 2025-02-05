@@ -16,7 +16,7 @@ const AIDetection = () => {
       const response = await fetch("https://api.logmeal.com/v2/image/segmentation/complete", {
         method: "POST",
         headers: {
-          "Authorization": 'Bearer ' + api_user_token,  
+          "Authorization": 'Bearer ' + process.env.REACT_APP_LOGMEAL_API_KEY,  
         },
         body: formData,
       });
