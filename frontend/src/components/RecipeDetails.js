@@ -30,10 +30,10 @@ const RecipeDetails = ({ recipe }) => {
     <div className="recipe-details">
       <h4>{recipe.title}</h4>
       <p><strong>Recipe name: </strong>{recipe.name}</p>
-      <p><strong>Ingrediants: </strong>{recipe.ingrediants}</p>
+      <p><strong>Ingrediants: </strong>{recipe.Ingredients}</p>
       <p><strong>Cooking instructions: </strong>{recipe.instructions}</p>
-      <p><strong>Preperation time: </strong>{recipe.time}</p>
-      <p><strong>Difficulty Level: </strong>{recipe.level}</p>
+      <p><strong>Preperation time: </strong>{recipe.prepTime}</p>
+      <p><strong>Difficulty Level: </strong>{recipe.difficulty}</p>
       <p>{formatDistanceToNow(new Date(recipe.createdAt), { addSuffix: true })}</p>
       <span className="material-symbols-outlined" onClick={handleClick}>delete</span>
     </div>
