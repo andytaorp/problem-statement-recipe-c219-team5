@@ -1,103 +1,105 @@
-import { useState } from "react"
-import { useRecipeContext } from "../hooks/useRecipeContext"
-import { useAuthContext } from '../hooks/useAuthContext'
+import { useState, useContext } from 'react';
+import { useAuthContext } from "../hooks/useAuthContext"; 
+import { RecipeContext } from '../context/RecipeContext';
+
+
 
 const RecipeForm = () => {
-  const { dispatch } = useRecipeContext()
-  const { user } = useAuthContext()
 
-  const [name, setName] = useState('')
-  const [Ingredients, setIngredients] = useState('')
-  const [instructions, setInstructions] = useState('')
-  const [prepTime, setPrepTime] = useState('')
-  const [difficulty, setDifficulty] = useState('')
-  const [error, setError] = useState(null)
-  const [emptyFields, setEmptyFields] = useState([])
+  const [name, setName] = useState('');
+  const [ingredients, setIngredients] = useState('');
+  const [instructions, setInstructions] = useState('');
+  const [difficulty, setDifficulty] = useState('easy'); 
+  const [prepTime, setprepTime] = useState('');
+  const [error, setError] = useState(null);
+
+  const { user } = useAuthContext(); 
+  const { dispatch } = useContext(RecipeContext); 
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (!user) {
-      setError('You must be logged in')
-      return
-    }
+    const recipe = { name, ingredients, instructions, prepTime, difficulty };
 
-    const workout = {title, load, reps}
+    try {
+      const response = await fetch('/api/recipes', {
+        method: 'POST',
+        body: JSON.stringify(recipe),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`, 
+        },
+      });
 
-    const response = await fetch('/api/Recipe', {
-      method: 'POST',
-      body: JSON.stringify(workout),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user.token}`
+      if (!response.ok) {
+        throw new Error('Unable to add recipe');
       }
-    })
-    const json = await response.json()
 
-    if (!response.ok) {
-      setError(json.error)
-      setEmptyFields(json.emptyFields)
+      const json = await response.json();
+      console.log(json);
+
+      dispatch({
+        type: 'CREATE_RECIPE',
+        payload: json, 
+      });
+
+      setName('');
+      setIngredients('');
+      setInstructions('');
+      setprepTime('');
+      setDifficulty('easy'); 
+      setError(null); 
+
+    } catch (err) {
+      setError(err.message); 
     }
-    if (response.ok) {
-      setName('')
-      setIngredients('')
-      setInstructions('')
-      setPrepTime('')
-      setDifficulty('')
-      setError(null)
-      setEmptyFields([])
-      dispatch({type: 'CREATE_RECIPE', payload: json})
-    }
-  }
+  };
 
   return (
-    <form className="create" onSubmit={handleSubmit}>
-      <h3>Add a New Recipe</h3>
-
+    <form onSubmit={handleSubmit} className="recipe-form">
       <label>Recipe Name:</label>
       <input 
-        type="text"
-        onChange={(e) => setName(e.target.value)}
-        value={name}
-        className={emptyFields.includes('name') ? 'error' : ''}
+        type="text" 
+        value={name} 
+        onChange={(e) => setName(e.target.value)} 
+        required 
       />
 
       <label>Ingredients:</label>
       <input 
-        type="text"
-        onChange={(e) => setIngredients(e.target.value)}
-        value={Ingredients}
-        className={emptyFields.includes('Ingredients') ? 'error' : ''}
+        value={ingredients} 
+        onChange={(e) => setIngredients(e.target.value)} 
+        required 
       />
 
-      <label>Instructions:</label>
+      <label>Cooking Instructions:</label>
       <input 
-        type="text"
-        onChange={(e) => setInstructions(e.target.value)}
-        value={instructions}
-        className={emptyFields.includes('instructions') ? 'error' : ''}
+        value={instructions} 
+        onChange={(e) => setInstructions(e.target.value)} 
+        required 
       />
 
-      <label>Prep Time:</label> 
+      <label>Preparation Time (mins):</label>
       <input 
-        type="text"
-        onChange={(e) => setPrepTime(e.target.value)}
-        value={prepTime}
-        className={emptyFields.includes('prepTime') ? 'error' : ''}
+        type="number" 
+        value={prepTime} 
+        onChange={(e) => setprepTime(e.target.value)} 
+        required 
       />
 
-      <label>Difficulty:</label>
-      <input 
-        type="text"
-        onChange={(e) => setDifficulty(e.target.value)}
-        value={difficulty}
-        className={emptyFields.includes('difficulty') ? 'error' : ''}
-      />
+      <label>Difficulty Level:</label>
+      <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} required>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+      <br/>
+      <br/>
+      <button type="submit">Add Recipe</button>
 
-      <button>Add Recipe</button>
-      {error && <div className="error">{error}</div>}
+      {error && <p className="error">{error}</p>} 
     </form>
-  )
-}
+  );
+};
 
-export default RecipeForm
+export default RecipeForm;
