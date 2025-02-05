@@ -1,4 +1,3 @@
-// useLogout.js
 import { useAuthContext } from './useAuthContext';
 
 const useLogout = () => {
