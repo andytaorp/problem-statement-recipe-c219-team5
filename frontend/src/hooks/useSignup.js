@@ -1,19 +1,40 @@
-import { useAuthContext } from './useAuthContext';
-import axios from 'axios';
-
-const useSignup = () => {
-  const { login } = useAuthContext();
-
-  const signupUser = async (email, password) => {
+import { useState } from 'react'
+import { useAuthContext } from './useAuthContext'
+ 
+export const useSignup = () => {
+  const [error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const { dispatch } = useAuthContext()
+ 
+  const signup = async (email, password) => {
+    setIsLoading(true)
+    setError(null)
+ 
     try {
-      const response = await axios.post('/api/auth/signup', { email, password });
-      login(response.data);
-    } catch (error) {
-      console.error('Signup failed:', error);
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+ 
+      if (!response.ok) {
+        const errorText = await response.text()
+        throw new Error(errorText || 'Sign up failed, please try again later.')
+      }
+ 
+      const json = await response.json()
+ 
+      localStorage.setItem('user', JSON.stringify(json))
+ 
+      dispatch({ type: 'LOGIN', payload: json })
+ 
+      setIsLoading(false)
+    } catch (err) {
+      setIsLoading(false)
+      setError(err.message)
     }
-  };
-
-  return { signupUser };
-};
-
-export default useSignup;
+  }
+ 
+  return { signup, isLoading, error }
+}
+ 
