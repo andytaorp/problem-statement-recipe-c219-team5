@@ -6,7 +6,7 @@ const AIpage = () => {
   const [loading, setLoading] = useState(false);
 
   const handleImageChange = (e) => {
-    setSelectedImage(e.target.files[0]);  // Save selected image
+    setSelectedImage(e.target.files[0]);  
   };
 
   const handleSubmit = async (e) => {
@@ -17,14 +17,13 @@ const AIpage = () => {
     }
 
     const formData = new FormData();
-    formData.append('image', selectedImage);  // Append the image to the FormData
-
+    formData.append('image', selectedImage);  
     setLoading(true);
 
     try {
       const response = await fetch('http://localhost:4000/api/ai', {
         method: 'POST',
-        body: formData,  // Send FormData with the image
+        body: formData, 
       });
 
       const data = await response.json();
