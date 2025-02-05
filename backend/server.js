@@ -6,7 +6,6 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const recipeRoutes = require("./routes/recipeRoutes");
 //sigma
-
 dotenv.config();
 
 const app = express();
