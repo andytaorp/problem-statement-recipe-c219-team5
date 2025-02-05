@@ -1,13 +1,18 @@
-import { useAuthContext } from './useAuthContext';
+import { useAuthContext } from './useAuthContext'
+import { useRecipeContext } from './useRecipeContext'  
 
-const useLogout = () => {
-  const { logout } = useAuthContext();
+export const useLogout = () => {
+  const { dispatch } = useAuthContext()
+  const { dispatch: dispatchRecipes } = useRecipeContext()  
 
-  const logoutUser = () => {
-    logout();
-  };
+  const logout = () => {
 
-  return { logoutUser };
-};
+    localStorage.removeItem('user')
 
-export default useLogout;
+    dispatch({ type: 'LOGOUT' })
+
+    dispatchRecipes({ type: 'SET_RECIPE', payload: [] })  
+  }
+
+  return { logout }
+}
