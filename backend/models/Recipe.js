@@ -17,6 +17,11 @@ const RecipeSchema = new mongoose.Schema(
       enum: ["easy", "medium", "hard"],
       required: true,
     },
+    category: {
+      type: String,
+      enum: ["Dessert", "Main Dish", "Appetizer", "Salad", "Soup", "Beverage", "Soup", "Bread", "Side Dish", "Snack", "Sauce", "Marinade", "Finger Food", "Other"], 
+      required: true,
+    },
     imageUrl: { type: String },
   },
   { timestamps: true }
