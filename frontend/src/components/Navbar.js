@@ -16,6 +16,9 @@ const Navbar = () => {
         <Link to="/">
           <h1>Recipe Book</h1>
         </Link>
+        <Link to="/ai">
+          <h1>AI Functionality</h1>  
+        </Link>
         <nav>
           {user && (
             <div>
@@ -35,4 +38,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default Navbar;

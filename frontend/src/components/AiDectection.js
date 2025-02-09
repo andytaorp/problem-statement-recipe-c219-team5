@@ -13,13 +13,17 @@ const AIDetection = () => {
     formData.append("image", file);
 
     try {
-      const response = await fetch("https://api.logmeal.es/v2/image/recognition/complete", {
+      const response = await fetch("https://api.logmeal.com/v2/image/segmentation/complete", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer YOUR_API_KEY`,
+          "Authorization": 'Bearer ' + process.env.REACT_APP_LOGMEAL_API_KEY,  
         },
         body: formData,
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch AI results");
+      }
 
       const data = await response.json();
       dispatch({ type: "SET_AI_RESULT", payload: data });
@@ -32,7 +36,7 @@ const AIDetection = () => {
     <div>
       <h2>Upload Food Image</h2>
       <input type="file" accept="image/*" onChange={handleImageUpload} />
-      {aiResult && (
+      {aiResult && aiResult.food_name && (
         <div>
           <h3>Detected Food: {aiResult.food_name}</h3>
           <p>Calories: {aiResult.calories}</p>
@@ -44,5 +48,3 @@ const AIDetection = () => {
 };
 
 export default AIDetection;
-
-//test
